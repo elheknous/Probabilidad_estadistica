@@ -1,3 +1,6 @@
+#####################
+######CLASE 2 #######
+#####################
 names(pokemon)
 ataquesPokemon <- pokemon$attack
 
