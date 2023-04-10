@@ -126,3 +126,73 @@ Analizando cómo se comporta la temperatura mínima y máxima a lo largo de los 
 -   Sobre la temperatura mínima podemos ver que presenta un coeficiente de simetría muy cercano a cero, por lo tanto, se considera como una forma simétrica, también presenta una curtosis negativa lo que quiere decir que es platicurtica, de esto se puede concluir que las temperaturas más bajas de los meses estudiados no tienen una gran diferencia entre ellas y están distribuidas de forma muy equitativa a lo largo del tiempo.
 
 -   La temperatura máxima presenta un coeficiente de asimetría negativo y una curtosis negativa haciendo de este histograma uno asimétrico hacia la izquierda y platicurtico, lo que quiere decir que los datos están mas concentrados en temperaturas por sobre la media y su distribución sea menos equitativa que las de las temperaturas mínimas
+
+# Análisis con respecto a las horas
+
+## Análisis de la Tem. Max 
+
+```{r}
+max(baseTemp$temperatura_max)
+```
+```{r}
+mesMayor <- baseInforme %>% filter(month == "7")
+mesMayor
+```
+
+```{r message = FALSE, warning = FALSE}
+histHoras <- ggplot(mesMayor, aes(x = TEMP))+
+  geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
+  geom_density(alpha = .8, fill = "#FF6666")+
+  geom_vline(aes(xintercept=median(TEMP)),
+  color="blue", linetype="dashed", size=1)
+histHoras
+
+mesMayor%>% 
+  summarise(asimetria = skewness(TEMP),
+            curtosis =kurtosis(TEMP)-3)
+```
+```{r}
+horaPromedio = mesMayor %>%
+  group_by(hour) %>%
+  summarise(total = n(),
+            mediaTemperatura = mean(TEMP))
+horaPromedio
+
+```
+```{r}
+max(horaPromedio$mediaTemperatura)
+```
+
+## Análisis de la Tem. Min.
+
+```{r}
+min(baseTemp$temperatura_min)
+```
+```{r}
+mesMenor <- baseInforme %>% filter(month == "12")
+mesMenor
+```
+
+```{r message = FALSE, warning = FALSE}
+histHoras <- ggplot(mesMenor, aes(x = TEMP))+
+  geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
+  geom_density(alpha = .8, fill = "#FF6666")+
+  geom_vline(aes(xintercept=median(TEMP)),
+  color="blue", linetype="dashed", size=1)
+histHoras
+
+mesMenor%>% 
+  summarise(asimetria = skewness(TEMP),
+            curtosis =kurtosis(TEMP)-3)
+```
+```{r}
+horaPromedio = mesMenor %>%
+  group_by(hour) %>%
+  summarise(total = n(),
+            mediaTemperatura = mean(TEMP))
+horaPromedio
+
+```
+```{r}
+min(horaPromedio$mediaTemperatura)
+```
