@@ -37,12 +37,14 @@ pie
 pie(base1$total,base1$Segment) "graficoi de torta"
 pie(base2$total,base2$State)
 base3 = Orders_East %>% filter(Ventas<=1000) #crear una base con un filtro
-hist(base3$Ventas) #crea histograma
+
+hist(baseInforme$TEMP) #crea histograma
+
 hist(rnorm(n=30,mean=5,sd=4) ) #buscar que hace"
 
 Orders_East$Ventas
 
-length(Orde$Ventas)
+length(Orders_East$Ventas)
 ventas = sort(Orders_East$Ventas) #ordena de menor a mayor
 
 

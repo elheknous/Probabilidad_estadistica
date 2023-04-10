@@ -154,7 +154,7 @@ iris %>% group_by(Species) %>%
 
 # veamos en profundidad el caso setosa
 
-iris  %>% filter(Species=="virginica") %>% 
+iris  %>% filter(Species=="setosa") %>% 
   ggplot(aes(Sepal.Length,  fill=factor(Species))) +
   theme_minimal() + geom_density(alpha=0.3)+
   scale_fill_manual(values=paleta)+
