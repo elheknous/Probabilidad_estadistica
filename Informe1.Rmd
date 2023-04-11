@@ -16,10 +16,10 @@ output:
 ---
 
 ```{r message = FALSE, warning = FALSE}
-library(dplyr)   # manipulacion de datos
-library(ggplot2) # visualizacion
-library(readxl) # leer excel y escribir excel
-library(moments) # asimetria y curtosis
+library(dplyr)   
+library(ggplot2) 
+library(readxl) 
+library(moments) 
 library(tidyverse)
 library(nortest)
 library(gridExtra)
@@ -41,21 +41,7 @@ baseInforme <- read_excel("C:/Users/jose/Downloads/MATUS_TORO_JOSE.xlsx")
 baseInforme
 ```
 
-# Análisis de temperatura mensual
-
-```{r message = FALSE, warning = FALSE}
-temperatura = baseInforme %>%   
-  ggplot(aes(y=TEMP)) +
-  geom_boxplot() +  
-  coord_flip() 
-temperatura
-summary(baseInforme$TEMP)
-
-```
-
-Considerando el diagrama de caja se puede ver que no existen datos atípicos, por lo tanto, para este caso, se estudiara la población completa de la temperatura
-
-## Análisis general
+# Tabla resumen
 
 ```{r}
 baseTemp = baseInforme %>%     
@@ -71,6 +57,22 @@ baseTemp = baseInforme %>%
             )
 baseTemp
 ```
+
+# Análisis de temperatura mensual
+
+```{r message = FALSE, warning = FALSE}
+temperatura = baseInforme %>%   
+  ggplot(aes(y=TEMP)) +
+  geom_boxplot() +  
+  coord_flip() 
+temperatura
+summary(baseInforme$TEMP)
+
+```
+
+Considerando el diagrama de caja se puede ver que no existen datos atípicos, por lo tanto, para este caso, se estudiara la población completa de la temperatura
+
+## Análisis general
 
 ```{r message = FALSE, warning = FALSE}
 histTemperatura <- ggplot(baseInforme, aes(x = TEMP))+
@@ -91,37 +93,39 @@ baseInforme %>%
 
 ```
 
-Analizando el histograma de la temperatura y los datos entregados en la tabla se llega a la conclusión de que los datos de la temperatura presentan un coeficiente de asimetría negativo por ende la temperatura generalmente suele ser más alta en los datos estudiados, además estos presentan una curtosis negativa lo que hace que el histograma se uno platicurtico
+Analizando el histograma de la temperatura y los datos entregados se llega a la conclusión de que los datos de la temperatura presentan un coeficiente de asimetría negativo, por lo tanto, la temperatura durante el estudio se concentra mayormente en temperaturas altas, además presenta una curtosis negativa lo que hace que el histograma se uno platicurtico
 
 ## Análisis de Max. y Min.
 
 ```{r message = FALSE, warning = FALSE}
   
-b <- ggplot(baseTemp, aes(x = temperatura_min))+
+HistogramaTemperaturasMin <- ggplot(baseTemp, aes(x = temperatura_min))+
   geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
   geom_density(alpha = .8, fill = "#FF6666")+
   geom_vline(aes(xintercept=median(temperatura_min)),
   color="blue", linetype="dashed", size=1) 
 
-c <- ggplot(baseTemp, aes(x = temperatura_max))+
+HistogramaTemperaturasMax <- ggplot(baseTemp, aes(x = temperatura_max))+
   geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
   geom_density(alpha = .8, fill = "#FF6666")+
   geom_vline(aes(xintercept=median(temperatura_max)),
   color="blue", linetype="dashed", size=1)
 
-grid.arrange(b,c,ncol=2)
+grid.arrange(HistogramaTemperaturasMin,HistogramaTemperaturasMax,ncol=2)
 ```
 
 ```{r}
 baseTemp %>% 
-  summarise(asimetria_temperatura_minima = skewness(temperatura_min),
+  summarise(mediana_Min = median(temperatura_min),
+            asimetria_temperatura_minima = skewness(temperatura_min),
             curtosis_temperatura_minima =kurtosis(temperatura_min)-3)
 baseTemp %>% 
-  summarise(asimetria_temperatura_maxima = skewness(temperatura_max),
+  summarise(mediana_Max = median(temperatura_max),
+            asimetria_temperatura_maxima = skewness(temperatura_max),
             curtosis_temperatura_maxima =kurtosis(temperatura_max)-3)
 ```
 
-Analizando cómo se comporta la temperatura mínima y máxima a lo largo de los meses a través de los histogramas y las tablas, tenemos que:
+Analizando cómo se comporta el promedio por mes de la temperatura mínima y máxima, como se muestra en la tabla resumen y observando los histogramas y las tablas anteriores, tenemos que:
 
 -   Sobre la temperatura mínima podemos ver que presenta un coeficiente de simetría muy cercano a cero, por lo tanto, se considera como una forma simétrica, también presenta una curtosis negativa lo que quiere decir que es platicurtica, de esto se puede concluir que las temperaturas más bajas de los meses estudiados no tienen una gran diferencia entre ellas y están distribuidas de forma muy equitativa a lo largo del tiempo.
 
@@ -129,11 +133,16 @@ Analizando cómo se comporta la temperatura mínima y máxima a lo largo de los 
 
 # Análisis con respecto a las horas
 
-## Análisis de la Tem. Max 
+A continuación, se analizarán dos muestras de la población, una correspondiente al mes que presento la media más alta de temperatura y la otra que presento la media más baja para, finalmente, estudiar la hora en que alcanzaron su mayor y menor valor de temperatura respectivamente
+
+## Análisis de la Tem. Max
+
+Primero se debe encontrar cual fue el mes con la media de temperatura más alta, a partir de este creamos una tabla con los valores de ese mes
 
 ```{r}
 max(baseTemp$temperatura_max)
 ```
+
 ```{r}
 mesMayor <- baseInforme %>% filter(month == "7")
 mesMayor
@@ -148,9 +157,13 @@ histHoras <- ggplot(mesMayor, aes(x = TEMP))+
 histHoras
 
 mesMayor%>% 
-  summarise(asimetria = skewness(TEMP),
+  summarise(mediana = median(TEMP),
+            asimetria = skewness(TEMP),
             curtosis =kurtosis(TEMP)-3)
 ```
+
+Con los valores de asimetría y de curtosis que presenta el histograma se concluye que este tiene una asimetría hacia la derecha y tiene una forma platicurtica lo que quiere decir que la temperatura del mes 7 presentan una tendencia a concentrarse en lugares menores a la media.
+
 ```{r}
 horaPromedio = mesMayor %>%
   group_by(hour) %>%
@@ -159,15 +172,21 @@ horaPromedio = mesMayor %>%
 horaPromedio
 
 ```
+
 ```{r}
 max(horaPromedio$mediaTemperatura)
 ```
 
+La tabla anterior muestra la temperatura media a cada hora, de aquí sacamos la media mas alta que corresponde a las 13 horas, con esto finalmente podemos decir que la media de temperatura mas alta es en el **mes 7 a las 13 horas**
+
 ## Análisis de la Tem. Min.
+
+Usamos la misma lógica que en el caso pasado
 
 ```{r}
 min(baseTemp$temperatura_min)
 ```
+
 ```{r}
 mesMenor <- baseInforme %>% filter(month == "12")
 mesMenor
@@ -182,9 +201,13 @@ histHoras <- ggplot(mesMenor, aes(x = TEMP))+
 histHoras
 
 mesMenor%>% 
-  summarise(asimetria = skewness(TEMP),
+  summarise(mediana = median(TEMP),
+            asimetria = skewness(TEMP),
             curtosis =kurtosis(TEMP)-3)
 ```
+
+Al igual que en la temperatura máxima el histograma presenta una asimetría a la derecha y una forma platicurtica, haciendo que la mayoría de datos se concentren en temperatura mas bajas 
+
 ```{r}
 horaPromedio = mesMenor %>%
   group_by(hour) %>%
@@ -193,6 +216,9 @@ horaPromedio = mesMenor %>%
 horaPromedio
 
 ```
+
 ```{r}
 min(horaPromedio$mediaTemperatura)
 ```
+
+Con las tablas anteriores podemos ver que la temperaturas más bajas en promedio se alcanzo a las 23 horas, por lo tanto se puede decir que las temperaturas mas bajas de los datos se alcanzaron en el mes 12 a las 23 horas
