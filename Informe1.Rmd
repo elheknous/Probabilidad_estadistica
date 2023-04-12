@@ -41,7 +41,9 @@ baseInforme <- read_excel("C:/Users/jose/Downloads/MATUS_TORO_JOSE.xlsx")
 baseInforme
 ```
 
-# Tabla resumen
+# Análisis de temperatura mensual
+
+## Tabla resumen
 
 ```{r}
 baseTemp = baseInforme %>%     
@@ -57,8 +59,6 @@ baseTemp = baseInforme %>%
             )
 baseTemp
 ```
-
-# Análisis de temperatura mensual
 
 ```{r message = FALSE, warning = FALSE}
 temperatura = baseInforme %>%   
@@ -206,7 +206,7 @@ mesMenor%>%
             curtosis =kurtosis(TEMP)-3)
 ```
 
-Al igual que en la temperatura máxima el histograma presenta una asimetría a la derecha y una forma platicurtica, haciendo que la mayoría de datos se concentren en temperatura mas bajas 
+Al igual que en la temperatura máxima el histograma presenta una asimetría a la derecha y una forma platicurtica, haciendo que la mayoría de datos se concentren en temperatura mas bajas
 
 ```{r}
 horaPromedio = mesMenor %>%
@@ -221,4 +221,76 @@ horaPromedio
 min(horaPromedio$mediaTemperatura)
 ```
 
-Con las tablas anteriores podemos ver que la temperaturas más bajas en promedio se alcanzo a las 23 horas, por lo tanto se puede decir que las temperaturas mas bajas de los datos se alcanzaron en el mes 12 a las 23 horas
+Con las tablas anteriores podemos ver que la temperaturas más bajas en promedio se alcanzo a las 23 horas, por lo tanto se puede decir que las temperaturas mas bajas de los datos se alcanzaron en el **mes 12 a las 23 horas**
+
+# Analisis del SO2 y NO2
+
+## SO2
+
+```{r}
+so2original = baseInforme %>% 
+  ggplot(aes(y=SO2)) +
+  geom_boxplot() +  
+  coord_flip() 
+
+
+so2modificado = baseInforme %>% filter(SO2 < 38) %>% 
+  ggplot(aes(y=SO2)) +
+  geom_boxplot() +  
+  coord_flip() 
+
+grid.arrange(so2original, so2modificado, ncol = 1)
+```
+
+```{r}
+baseSO2 = baseInforme%>% 
+    summarise(mediana_original = median(SO2),
+              media_original = mean(SO2),
+            desv_original = sd(SO2))
+baseSO2
+
+baseSO2modificado = baseInforme%>% filter(SO2 < 38) %>% 
+    summarise(mediana_modificada = median(SO2),
+              media_modificada = mean(SO2),
+            desv_modificada = sd(SO2))
+baseSO2modificado
+
+```
+
+En la primera grafica se ven los datos del so2 sin modificar mientras que en la segunda se ven modificados, analizando las tablas de valores de ambos notamos que sacar los datos atípicos altera mucho el comportamiento de so2, por lo tanto, el estudio se realizara con la población completa sin eliminar los datos atípicos
+
+## NO2
+
+```{r}
+no2original = baseInforme %>% 
+  ggplot(aes(y=NO2)) +
+  geom_boxplot() +  
+  coord_flip() 
+
+
+no2modificado = baseInforme %>% filter(NO2 < 142) %>% 
+  ggplot(aes(y=NO2)) +
+  geom_boxplot() +  
+  coord_flip() 
+
+grid.arrange(no2original, no2modificado, ncol = 1)
+```
+
+```{r}
+baseNO2 = baseInforme%>% 
+    summarise(mediana_original = median(NO2),
+              media_original = mean(NO2),
+            desv_original = sd(NO2))
+baseNO2
+
+baseNO2modificado = baseInforme%>% filter(NO2 < 142) %>% 
+    summarise(mediana_modificada = median(NO2),
+              media_modificada = mean(NO2),
+            desv_modificada = sd(NO2))
+baseNO2modificado
+
+```
+
+En este caso podemos ver que los valores atípicos del NO2 realmente no alteran de forma significativa la estadística, por lo tanto podemos trabajar sin ellos
+
+## Comparación
