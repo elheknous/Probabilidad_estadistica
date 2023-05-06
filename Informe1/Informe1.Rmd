@@ -1,7 +1,7 @@
 ---
 title: "Informe 1"
 author: "José Matus"
-date: "2023-04-08"
+date: "2023-04-12"
 output: 
   html_document:
     toc: true
@@ -27,11 +27,12 @@ library(gridExtra)
 
 # Introduccion
 
-El propósito de este informe será analizar la temperatura según el mes de los datos entregados, además se estudiará el nivel de SO2 Y NO2 durante el año, finalmente se realizará una conclusión con los resultados
-
 Contexto de los datos:
 
-los datos que se estudiaran fueron extraídos durante el año 2013, donde se estudiaron las variables del material particulado, dióxido de azufre, dióxido de nitrógeno, temperatura, lluvia y presión. Estos datos fueron extraídos a una determinada hora y mes desde marzo hasta diciembre.
+Los datos que se estudiaran fueron extraídos durante el año 2013, donde se extrajeron las variables del material particulado, dióxido de azufre, dióxido de nitrógeno, temperatura, lluvia y presión. Estos datos fueron extraídos a una determinada hora y mes desde marzo hasta diciembre.
+
+El propósito de este informe será analizar la temperatura según el mes de los datos entregados, se analizará el mes en el cual la media de temperatura fue más alta y más baja, luego se analizará la hora en que la temperatura alcanzo su mayor y menor valor respectivamente para así tener el mes y la hora en donde la temperatura fue más alta y más baja de todos los datos estudiados, Además se estudiará el nivel de SO2 Y NO2 durante el año y compararemos los resultados.
+
 
 # Base de datos
 
@@ -257,7 +258,7 @@ baseSO2modificado
 
 ```
 
-En la primera grafica se ven los datos del so2 sin modificar mientras que en la segunda se ven modificados, analizando las tablas de valores de ambos notamos que sacar los datos atípicos altera mucho el comportamiento de so2, por lo tanto, el estudio se realizara con la población completa sin eliminar los datos atípicos
+En la primera grafica se ven los datos del so2 sin modificar mientras que en la segunda se ven modificados, analizando las tablas de valores de ambos notamos que los datos atípicos alteran mucho el comportamiento de so2, por lo tanto, el estudio se realizara sin ellos
 
 ## NO2
 
@@ -291,6 +292,47 @@ baseNO2modificado
 
 ```
 
-En este caso podemos ver que los valores atípicos del NO2 realmente no alteran de forma significativa la estadística, por lo tanto podemos trabajar sin ellos
+En este caso podemos ver que los valores atípicos del NO2 realmente no alteran de forma significativa la estadística, por lo tanto podemos trabajar con ellos
 
 ## Comparación
+
+```{r message = FALSE, warning = FALSE}
+
+grid.arrange(so2modificado, no2original ,ncol =1)
+
+histSO2 <- ggplot(baseInforme %>% filter(SO2 < 38), aes(x = SO2))+
+  geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
+  geom_density(alpha = .8, fill = "#FF6666")+
+  geom_vline(aes(xintercept=median(SO2)),
+  color="blue", linetype="dashed", size=1)
+
+
+histNO2 <- ggplot(baseInforme, aes(x = NO2))+
+  geom_histogram(aes(y = ..density..), colour = "black",fill="white")+
+  geom_density(alpha = .8, fill = "#FF6666")+
+  geom_vline(aes(xintercept=median(NO2)),
+  color="blue", linetype="dashed", size=1)
+
+
+grid.arrange(histSO2,histNO2,ncol=1)
+
+a = baseInforme %>% filter(SO2 < 38)
+a%>% 
+  summarise(asimetriaSO2 = skewness(SO2),
+            curtosisSO2 =kurtosis(SO2)-3)
+
+baseInforme%>%
+    summarise(asimetriaSO2 = skewness(baseInforme$NO2),
+            curtosisSO2 =kurtosis(baseInforme$NO2)-3)
+
+
+
+```
+
+De los histogramas se puede afirmar que:
+
+-   La moda, la mediana y la media del SO2 son bastante más pequeñas que la del NO2, lo que quiere decir que el NO2 está mucho más presente en el aire
+
+-   El SO2 tiende a tener valores menores a la media y estar bien distribuido a lo largo de la muestra al tener un histograma con asimetría positiva y platicurtico
+
+-   El NO2, al igual que el SO2, tiende a ser menor que la media, la diferencia radica que su histograma presenta una forma platicurtica ya que los datos están muy concentrados en un lugar
