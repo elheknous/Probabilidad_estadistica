@@ -17,7 +17,7 @@ paleta <- c("#FF5A5F", "#FFB400", "#007A87",
 
 
 # caso continuo ----
-install.packages("ggvis")
+#install.packages("ggvis")
 # consideremos los siguientes datos de la libreria siguiente
 #install.packages("ggvis")
 library(ggvis)

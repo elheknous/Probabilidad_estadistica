@@ -32,27 +32,39 @@ ppcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
 #chao exponeencial
 
 gofstat(list(fg,fn,fln,fw,fe))
-ks.test(no2,"pgamma",fg$estimate[1],fg$estimate[2])
-ks.test(no2,"pweibull",fw$estimate[1],fw$estimate[2]) ##PARAMETROS
+ks.test(no2,"pgamma",fg$estimate[1],fg$estimate[2]) #0.001663
 
+ks.test(no2,"pnorm",fn$estimate[1],fn$estimate[2]) ##MAYOR QUE GAMMA 0.03113
 
+pweibull()
+ks.test(no2,"pweibull",shape=fw$estimate[1],scale=fw$estimate[2]) #### PREGUNTAR PARAMETROS 0.2535
+
+0.03113 >  0.001663
 ###########################################################
 
 # X : Nivel de temperatura
-temp = base_datos$TEMP
-summary(temp)
+SO2 = base_datos$SO2
+fw <-fitdist(SO2,"weibull")
+fln<-fitdist(SO2,"lnorm")
+fg <-fitdist(SO2,"gamma")
+fn <-fitdist(SO2,"norm")
+fe <-fitdist(SO2,"exp")
+# fb <-fitdist(no2,"beta") no se mueve entre 0 y 1
+plot.legend<-c("Weibull","LogNormal","Gamma","Normal","Exponencial")
 
-#fw <-fitdist(temp,"weibull")
-#fln<-fitdist(temp,"lnorm")
-fn <-fitdist(temp,"norm")
+denscomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
+qqcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
+cdfcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
+ppcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
 
-plot.legend<-c("Normal")
+gofstat(list(fg,fn,fln,fw,fe))
 
-denscomp(list(fn), legendtext=plot.legend)
-qqcomp(list(fn), legendtext=plot.legend)
-cdfcomp(list(fn), legendtext=plot.legend)
-ppcomp(list(fn), legendtext=plot.legend)
-ks.test(no2,"pnorm",fn$estimate[1],fn$estimate[2])
+#LNORMAL
+
+
+
+
+
 
 #no tiene distribucion continua estudiada
 

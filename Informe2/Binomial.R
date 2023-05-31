@@ -10,48 +10,28 @@ library(gamlss.dist)
 library(fitdistrplus)
 
 
-#x = binomial(n = total;p = probabilidad) q = 0.85
-#dbinom(x,n,p)
-p = 0.01
-n = 30
-
-#p(x = 5)
-dbinom(5,n,p)
-
-#A lo mas 8
-# p(x <= 8)
-pbinom(8,n,p)
-
-#p(x<2) = p(x = 0) + p(x = 1) 
-dbinom(0,n,p) + dbinom(1,n,p)
-
-#p(x >3) = 1 - p(x<=3)
-1 - pbinom(3,n,p)
-
-x = c(0:n)
-mean(x)
-y = dbinom(x,n,p)
-
-plot(x,y)
-table(x)
-
-barplot(table(x,y))
  ####################################################################
 ##################################################################
 ###############################################################
 
 base_datos = base_datos %>% 
-  mutate(Temperatura_alta = ifelse(TEMP >= 25,1,0))
-length(temp)
+  mutate(NO2_alto = ifelse(NO2 >= 80,1,0))
 probs = NULL
-n1 = round(length(base_datos$TEMP)*0.2,0)
-for (i in 1:100) {
-  sample.aux = temp %>% sample(n1,replace=F)
+n1 = round(length(base_datos$NO2)*0.2,0)
+for (i in 1:1000) {
+  sample.aux = base_datos$NO2_alto %>% sample(n1,replace=F)
   probs = c(probs,mean(sample.aux))
   
 }
 p = mean(probs)
 p
+
+#install.packages("mosaic")
+library(mosaic)
+
+pbinom(20,size = 40,prob = p) -pbinom(15,size = 40,prob = p)
+plotDist(dist="binom",size = 40,prob =p)
+plotDist(dist="binom",size = n,prob =p,kind ="histogram")
 
 
 
