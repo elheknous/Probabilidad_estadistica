@@ -1,0 +1,65 @@
+---
+title: "Informe 2"
+author: "José Matus"
+date: "2023-04-12"
+output: 
+  html_document:
+    toc: true
+    toc_depth: 3
+    toc_float: true
+    collapsed: true
+    smooth_scroll: true
+    theme: journal
+    highlight: kate
+    df_print: paged
+    code_folding: show
+    
+---
+```{r message = FALSE, warning = FALSE}
+library(dplyr)   
+library(ggplot2) 
+library(readxl) 
+library(moments) 
+library(tidyverse)
+library(nortest)
+library(gridExtra)
+```
+
+```{r}
+base_datos <- read_excel("C:/Users/jose/Downloads/MATUS_TORO_JOSE (1).xlsx")
+
+```
+# Analisis NO2
+## Binominal
+```{r}
+no2 = base_datos$NO2
+
+cajaNo2 = base_datos %>%   
+  ggplot(aes(y=NO2)) +
+  geom_boxplot() +  
+  coord_flip()
+no2modificado = base_datos %>% filter(NO2 < 142) %>% 
+  ggplot(aes(y=NO2)) +
+  geom_boxplot() +  
+  coord_flip()
+
+grid.arrange(cajaNo2,no2modificado)
+
+
+
+```
+
+## Poisson
+
+# Analisis temperatura
+## Binomial negativo
+
+
+# Casos continuos
+## NO2
+```{r}
+
+```
+
+## Temperatura
+

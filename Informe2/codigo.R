@@ -159,6 +159,7 @@ pbeta(0.45,alpha,beta)-pbeta(0.20,alpha,beta)
 #FRacASO : calidad <0.85
 cocaina = cocaina %>%
   mutate(calidad = ifelse(potency>85,1,0))
+cocaina
 length(coca_pot)
 probs = NULL
 n1 = round(length(cocaina$calidad)*0.2,0)
@@ -180,7 +181,7 @@ mean(cocaina$calidad)
 
 pbinom(20,size = 40,prob = p) -pbinom(15,size = 40,prob = p)
 
-install.packages("mosaic")
+#install.packages("mosaic")
 library(mosaic)
 n =40
 plotDist(dist="binom",size = n,prob =p)
