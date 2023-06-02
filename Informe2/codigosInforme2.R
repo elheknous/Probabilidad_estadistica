@@ -34,7 +34,8 @@ ppcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
 gofstat(list(fg,fn,fln,fw,fe))
 ks.test(no2,"pgamma",fg$estimate[1],fg$estimate[2]) #0.001663
 
-ks.test(no2,"pnorm",fn$estimate[1],fn$estimate[2]) ##MAYOR QUE GAMMA 0.03113
+pnorm()
+ks.test(no2,"pnorm",mean = fn$estimate[1],sd = fn$estimate[2]) ##MAYOR QUE GAMMA 0.03113
 
 pweibull()
 ks.test(no2,"pweibull",shape=fw$estimate[1],scale=fw$estimate[2]) #### PREGUNTAR PARAMETROS 0.2535
@@ -49,7 +50,6 @@ fln<-fitdist(SO2,"lnorm")
 fg <-fitdist(SO2,"gamma")
 fn <-fitdist(SO2,"norm")
 fe <-fitdist(SO2,"exp")
-# fb <-fitdist(no2,"beta") no se mueve entre 0 y 1
 plot.legend<-c("Weibull","LogNormal","Gamma","Normal","Exponencial")
 
 denscomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
@@ -58,6 +58,7 @@ cdfcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
 ppcomp(list(fw,fln,fg,fn,fe), legendtext=plot.legend)
 
 gofstat(list(fg,fn,fln,fw,fe))
+
 
 #LNORMAL
 

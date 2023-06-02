@@ -10,7 +10,7 @@ n1
 
 lambdas = NULL
 
-for (i in 1:1000) {
+for (i in 1:100) {
   sample.aux = base_datos %>%  slice(sample(1:dim(base_datos)[1],size=n1)) %>%
     group_by(hour) %>% dplyr::summarise(tasa = sum(NO2_alto))
   tasa.aux = mean(sample.aux$tasa)
