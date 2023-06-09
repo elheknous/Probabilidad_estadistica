@@ -1,7 +1,7 @@
 ---
 title: "Informe 2"
 author: "José Matus"
-date: "2023-04-12"
+date: "2023-06-02"
 output: 
   html_document:
     toc: true
@@ -213,7 +213,7 @@ Con el calculo de la probabilidad tenemos que:
 
 -   fracasos = 15 - 5
 
--   p = 0.36
+-   p = 0.37
 
 ```{r}
 dnbinom(10,5,p)

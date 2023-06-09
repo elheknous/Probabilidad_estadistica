@@ -185,6 +185,10 @@ pbinom(20,size = 40,prob = p) -pbinom(15,size = 40,prob = p)
 library(mosaic)
 n =40
 plotDist(dist="binom",size = n,prob =p)
+
+plotDist(dist="pois",6)
+
+
 plotDist(dist="binom",size = n,prob =p,kind ="histogram")
 
 
